@@ -61,11 +61,17 @@ On Windows, simply double-click `start.bat` in the root folder to start both ser
 
 ## 🌐 Deploy to Vercel
 
-This repository includes `vercel.json` configured out-of-the-box:
+This repository is optimized for Vercel deployment:
 
 1. Import this repository into [Vercel](https://vercel.com).
-2. Vercel automatically runs `npm --prefix frontend install && npm --prefix frontend run build` and serves `frontend/dist`.
-3. The app includes client-side fallback telemetry so the interactive map, routes, driver console, student pass, and admin alerts run smoothly on serverless environments!
+2. Set **Root Directory** to `frontend`.
+3. Standard Vite settings apply automatically:
+   - **Framework Preset**: Vite
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+   - **Install Command**: `npm install`
+4. SPA route rewrites in `vercel.json` route all requests to `index.html` seamlessly.
+5. The app includes client-side fallback telemetry so the interactive map, routes, driver console, student pass, and admin alerts run smoothly on serverless environments!
 
 ---
 

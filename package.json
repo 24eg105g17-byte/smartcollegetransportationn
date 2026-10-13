@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Full-stack Smart College Transportation System with live GPS tracking, student pass, driver console, and admin portal.",
   "scripts": {
-    "build": "npm --prefix frontend install && npm --prefix frontend run build",
+    "build": "npm --prefix frontend run build",
     "backend": "npm --prefix backend start",
     "frontend": "npm --prefix frontend dev",
     "start": "node backend/server.js"

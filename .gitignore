@@ -4,6 +4,7 @@ node_modules/
 
 # Production builds
 dist/
+frontend/dist/
 client/dist/
 
 # Logs
