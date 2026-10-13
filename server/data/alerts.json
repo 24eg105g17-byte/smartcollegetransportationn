@@ -1,0 +1,20 @@
+[
+  {
+    "id": "alert-1",
+    "type": "info",
+    "title": "Evening Trip Timing Rescheduled",
+    "message": "Due to sports day practice, departure from campus will be delayed by 15 mins today for all routes.",
+    "timestamp": "2026-10-13T09:30:00.000Z",
+    "routeId": "all",
+    "priority": "Normal"
+  },
+  {
+    "id": "alert-2",
+    "type": "warning",
+    "title": "Flyover Construction near Begumpet",
+    "message": "Route 3 is experiencing moderate traffic slowdown. Expect 8-10 mins additional transit time.",
+    "timestamp": "2026-10-13T08:15:00.000Z",
+    "routeId": "route-3",
+    "priority": "High"
+  }
+]

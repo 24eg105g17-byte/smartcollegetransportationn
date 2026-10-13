@@ -1,0 +1,89 @@
+[
+  {
+    "id": "route-1",
+    "code": "R-101",
+    "name": "Route 1 - North Campus Express",
+    "color": "#3B82F6",
+    "totalDistance": "18.2 km",
+    "estimatedDuration": "42 mins",
+    "stops": [
+      { "id": "s-1-1", "name": "Kukatpally Y Junction", "lat": 17.4932, "lng": 78.4018, "timeMorning": "07:30 AM", "timeEvening": "05:45 PM", "order": 1 },
+      { "id": "s-1-2", "name": "JNTU Main Gate", "lat": 17.4986, "lng": 78.3892, "timeMorning": "07:42 AM", "timeEvening": "05:32 PM", "order": 2 },
+      { "id": "s-1-3", "name": "Miyapur Metro Station", "lat": 17.4968, "lng": 78.3614, "timeMorning": "07:55 AM", "timeEvening": "05:20 PM", "order": 3 },
+      { "id": "s-1-4", "name": "Kondapur Junction", "lat": 17.4682, "lng": 78.3578, "timeMorning": "08:10 AM", "timeEvening": "05:05 PM", "order": 4 },
+      { "id": "s-1-5", "name": "Cyber Towers Circle", "lat": 17.4504, "lng": 78.3808, "timeMorning": "08:22 AM", "timeEvening": "04:50 PM", "order": 5 },
+      { "id": "s-1-6", "name": "Engineering College Main Campus", "lat": 17.4350, "lng": 78.3420, "timeMorning": "08:35 AM", "timeEvening": "04:30 PM", "order": 6 }
+    ],
+    "waypoints": [
+      [17.4932, 78.4018],
+      [17.4950, 78.3960],
+      [17.4986, 78.3892],
+      [17.4975, 78.3750],
+      [17.4968, 78.3614],
+      [17.4820, 78.3590],
+      [17.4682, 78.3578],
+      [17.4580, 78.3690],
+      [17.4504, 78.3808],
+      [17.4420, 78.3620],
+      [17.4350, 78.3420]
+    ]
+  },
+  {
+    "id": "route-2",
+    "code": "R-102",
+    "name": "Route 2 - South Metro Feeder",
+    "color": "#10B981",
+    "totalDistance": "21.6 km",
+    "estimatedDuration": "50 mins",
+    "stops": [
+      { "id": "s-2-1", "name": "Mehdipatnam Bus Depo", "lat": 17.3916, "lng": 78.4402, "timeMorning": "07:25 AM", "timeEvening": "05:50 PM", "order": 1 },
+      { "id": "s-2-2", "name": "Tolichowki Flyover", "lat": 17.4022, "lng": 78.4126, "timeMorning": "07:40 AM", "timeEvening": "05:35 PM", "order": 2 },
+      { "id": "s-2-3", "name": "Shaikpet Dargah Stop", "lat": 17.4118, "lng": 78.3895, "timeMorning": "07:55 AM", "timeEvening": "05:20 PM", "order": 3 },
+      { "id": "s-2-4", "name": "Bio-Diversity Park", "lat": 17.4255, "lng": 78.3712, "timeMorning": "08:12 AM", "timeEvening": "05:00 PM", "order": 4 },
+      { "id": "s-2-5", "name": "Gachibowli Stadium", "lat": 17.4431, "lng": 78.3482, "timeMorning": "08:24 AM", "timeEvening": "04:45 PM", "order": 5 },
+      { "id": "s-2-6", "name": "Engineering College Main Campus", "lat": 17.4350, "lng": 78.3420, "timeMorning": "08:35 AM", "timeEvening": "04:30 PM", "order": 6 }
+    ],
+    "waypoints": [
+      [17.3916, 78.4402],
+      [17.3970, 78.4260],
+      [17.4022, 78.4126],
+      [17.4060, 78.4010],
+      [17.4118, 78.3895],
+      [17.4180, 78.3800],
+      [17.4255, 78.3712],
+      [17.4340, 78.3600],
+      [17.4431, 78.3482],
+      [17.4390, 78.3440],
+      [17.4350, 78.3420]
+    ]
+  },
+  {
+    "id": "route-3",
+    "code": "R-103",
+    "name": "Route 3 - East City Connector",
+    "color": "#F59E0B",
+    "totalDistance": "26.4 km",
+    "estimatedDuration": "58 mins",
+    "stops": [
+      { "id": "s-3-1", "name": "Secunderabad Station", "lat": 17.4334, "lng": 78.5015, "timeMorning": "07:15 AM", "timeEvening": "06:00 PM", "order": 1 },
+      { "id": "s-3-2", "name": "Begumpet Airport Road", "lat": 17.4442, "lng": 78.4683, "timeMorning": "07:30 AM", "timeEvening": "05:42 PM", "order": 2 },
+      { "id": "s-3-3", "name": "Panjagutta Central", "lat": 17.4264, "lng": 78.4510, "timeMorning": "07:45 AM", "timeEvening": "05:25 PM", "order": 3 },
+      { "id": "s-3-4", "name": "Jubilee Hills Checkpost", "lat": 17.4286, "lng": 78.4132, "timeMorning": "08:05 AM", "timeEvening": "05:05 PM", "order": 4 },
+      { "id": "s-3-5", "name": "Madhapur Police Station", "lat": 17.4485, "lng": 78.3912, "timeMorning": "08:20 AM", "timeEvening": "04:48 PM", "order": 5 },
+      { "id": "s-3-6", "name": "Engineering College Main Campus", "lat": 17.4350, "lng": 78.3420, "timeMorning": "08:35 AM", "timeEvening": "04:30 PM", "order": 6 }
+    ],
+    "waypoints": [
+      [17.4334, 78.5015],
+      [17.4390, 78.4850],
+      [17.4442, 78.4683],
+      [17.4350, 78.4590],
+      [17.4264, 78.4510],
+      [17.4270, 78.4320],
+      [17.4286, 78.4132],
+      [17.4380, 78.4020],
+      [17.4485, 78.3912],
+      [17.4410, 78.3650],
+      [17.4350, 78.3420]
+    ]
+  }
+]

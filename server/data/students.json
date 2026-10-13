@@ -1,0 +1,44 @@
+[
+  {
+    "id": "STU-2024-001",
+    "name": "Sai Chandana",
+    "rollNo": "21A91A0501",
+    "department": "Computer Science & Engineering",
+    "year": "4th Year",
+    "routeId": "route-1",
+    "pickupStop": "JNTU Main Gate",
+    "passValidUntil": "31-Dec-2026",
+    "status": "Active",
+    "passType": "Annual Pass",
+    "qrToken": "PASS-21A91A0501-ACTIVE",
+    "emergencyContact": "+91 98765 43210"
+  },
+  {
+    "id": "STU-2024-002",
+    "name": "Arjun Sharma",
+    "rollNo": "22A91A0412",
+    "department": "Electronics & Communication",
+    "year": "3rd Year",
+    "routeId": "route-2",
+    "pickupStop": "Tolichowki Flyover",
+    "passValidUntil": "31-Dec-2026",
+    "status": "Active",
+    "passType": "Semester Pass",
+    "qrToken": "PASS-22A91A0412-ACTIVE",
+    "emergencyContact": "+91 98111 22334"
+  },
+  {
+    "id": "STU-2024-003",
+    "name": "Priya Verma",
+    "rollNo": "23A91A1208",
+    "department": "Information Technology",
+    "year": "2nd Year",
+    "routeId": "route-3",
+    "pickupStop": "Begumpet Airport Road",
+    "passValidUntil": "31-Dec-2026",
+    "status": "Active",
+    "passType": "Annual Pass",
+    "qrToken": "PASS-23A91A1208-ACTIVE",
+    "emergencyContact": "+91 98333 44556"
+  }
+]

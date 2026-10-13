@@ -1,0 +1,22 @@
+{
+  "name": "smart-college-transportation-system",
+  "version": "1.0.0",
+  "description": "Full-stack Smart College Transportation System with live GPS tracking, student pass, driver console, and admin portal.",
+  "scripts": {
+    "build": "npm --prefix client install && npm --prefix client run build",
+    "server": "npm --prefix server start",
+    "client": "npm --prefix client dev",
+    "start": "node server/server.js"
+  },
+  "keywords": [
+    "transportation",
+    "tracking",
+    "college",
+    "gps",
+    "realtime",
+    "leaflet",
+    "react"
+  ],
+  "author": "",
+  "license": "ISC"
+}

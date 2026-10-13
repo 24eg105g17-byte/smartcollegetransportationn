@@ -1,0 +1,32 @@
+[
+  {
+    "id": "drv-1",
+    "name": "Rajesh Kumar",
+    "phone": "+91 98480 12345",
+    "license": "DL-042011002341",
+    "experience": "8 Years",
+    "busId": "bus-101",
+    "status": "On Duty",
+    "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80"
+  },
+  {
+    "id": "drv-2",
+    "name": "Mohammad Irfan",
+    "phone": "+91 98765 67890",
+    "license": "DL-042015009876",
+    "experience": "11 Years",
+    "busId": "bus-102",
+    "status": "On Duty",
+    "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80"
+  },
+  {
+    "id": "drv-3",
+    "name": "Suresh Reddy",
+    "phone": "+91 99123 45678",
+    "license": "DL-042018005432",
+    "experience": "6 Years",
+    "busId": "bus-103",
+    "status": "On Duty",
+    "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&auto=format&fit=crop&q=80"
+  }
+]
