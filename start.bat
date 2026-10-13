@@ -5,9 +5,9 @@ echo   Starting Smart College Transportation System...
 echo ========================================================
 echo.
 
-start "Backend Server" cmd /k "cd server && npm start"
+start "Backend Server" cmd /k "cd backend && npm start"
 timeout /t 2 /nobreak >nul
-start "Frontend Client" cmd /k "cd client && npm run dev"
+start "Frontend Client" cmd /k "cd frontend && npm run dev"
 
 timeout /t 3 /nobreak >nul
 start http://localhost:5173/

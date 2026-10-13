@@ -39,7 +39,7 @@ A modern, real-time college bus tracking and transportation management system bu
 ### 1. Start the Backend Server
 ```bash
 # In terminal 1:
-cd server
+cd backend
 npm install
 npm start
 ```
@@ -48,7 +48,7 @@ The server runs on `http://localhost:5000` and starts the real-time GPS simulati
 ### 2. Start the Frontend Client
 ```bash
 # In terminal 2:
-cd client
+cd frontend
 npm install
 npm run dev
 ```
@@ -64,7 +64,7 @@ On Windows, simply double-click `start.bat` in the root folder to start both ser
 This repository includes `vercel.json` configured out-of-the-box:
 
 1. Import this repository into [Vercel](https://vercel.com).
-2. Vercel automatically runs `npm --prefix client install && npm --prefix client run build` and serves `client/dist`.
+2. Vercel automatically runs `npm --prefix frontend install && npm --prefix frontend run build` and serves `frontend/dist`.
 3. The app includes client-side fallback telemetry so the interactive map, routes, driver console, student pass, and admin alerts run smoothly on serverless environments!
 
 ---
@@ -72,11 +72,11 @@ This repository includes `vercel.json` configured out-of-the-box:
 ## 📁 Project Architecture
 
 ```
-smart college transportation system/
+smartcollegetransportationn/
 ├── package.json               # Root scripts & Vercel build definition
 ├── vercel.json                # Vercel deployment configuration
 ├── start.bat                  # 1-click launcher for Windows
-├── server/                    # Node.js + Express + Socket.IO Backend
+├── backend/                   # Node.js + Express + Socket.IO Backend
 │   ├── server.js              # Express app & real-time Socket.IO handler
 │   ├── simulator.js           # GPS movement simulation engine
 │   ├── package.json
@@ -87,7 +87,7 @@ smart college transportation system/
 │       ├── drivers.json       # Driver profiles
 │       ├── students.json      # Student registration & bus pass tokens
 │       └── alerts.json        # System announcements & emergency logs
-└── client/                    # React 18 + Vite + Leaflet Frontend
+└── frontend/                  # React 18 + Vite + Leaflet Frontend
     ├── index.html             # Full-height styles & meta configuration
     ├── vite.config.js         # Proxy configuration for API & WebSocket
     ├── package.json
