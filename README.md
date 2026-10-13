@@ -1,6 +1,6 @@
 # 🚌 Smart College Transportation System
 
-A modern, real-time college bus tracking and transportation management system built with **React**, **Node.js**, **Express**, **Socket.IO**, and **Leaflet**.
+A modern, real-time college bus tracking and transportation management system built with **React 18**, **Node.js**, **Express**, **Socket.IO**, and **Leaflet**.
 
 ---
 
@@ -8,7 +8,7 @@ A modern, real-time college bus tracking and transportation management system bu
 
 1. **🗺️ Live GPS Radar & Interactive Map View**
    - Real-time simulation of college buses moving along designated city-to-campus routes.
-   - Interactive OpenStreetMap (CartoDB Dark Voyager) tiles with smooth GPS waypoint interpolation.
+   - Interactive OpenStreetMap tiles with smooth GPS waypoint interpolation.
    - Dynamic stop markers showing morning pickup and evening drop schedules.
    - Live telemetry: bus speed (km/h), fuel level, seat occupancy progress, and ETA to the next stop.
 
@@ -19,7 +19,7 @@ A modern, real-time college bus tracking and transportation management system bu
 
 3. **👨‍✈️ Driver Cockpit & Trip Console**
    - **Real-time Telemetry:** Live velocity gauge, fuel monitor, and coordinates.
-   - **Trip Controls:** Pause or resume live GPS broadcasting.
+   - **Trip Controls:** Pause or resume live GPS broadcasting, speed regulation, and manual step-to-stop.
    - **Passenger Counter:** Board (+1) and off-board (-1) controls with capacity warnings.
    - **Emergency SOS:** Direct critical alarm broadcasting to the campus control room.
 
@@ -38,19 +38,34 @@ A modern, real-time college bus tracking and transportation management system bu
 
 ### 1. Start the Backend Server
 ```bash
-# Open a terminal:
+# In terminal 1:
 cd server
+npm install
 npm start
 ```
-The server will run on `http://localhost:5000` and start the GPS simulation engine with Socket.IO.
+The server runs on `http://localhost:5000` and starts the real-time GPS simulation engine with Socket.IO.
 
 ### 2. Start the Frontend Client
 ```bash
-# Open a second terminal:
+# In terminal 2:
 cd client
+npm install
 npm run dev
 ```
-The client will launch on `http://localhost:5173`. Open your browser and navigate to `http://localhost:5173` to interact with the system!
+The client launches on `http://localhost:5173`. Open your browser and navigate to `http://localhost:5173` to interact with the system!
+
+### 3. Windows 1-Click Launch
+On Windows, simply double-click `start.bat` in the root folder to start both servers automatically.
+
+---
+
+## 🌐 Deploy to Vercel
+
+This repository includes `vercel.json` configured out-of-the-box:
+
+1. Import this repository into [Vercel](https://vercel.com).
+2. Vercel automatically runs `npm --prefix client install && npm --prefix client run build` and serves `client/dist`.
+3. The app includes client-side fallback telemetry so the interactive map, routes, driver console, student pass, and admin alerts run smoothly on serverless environments!
 
 ---
 
@@ -58,11 +73,14 @@ The client will launch on `http://localhost:5173`. Open your browser and navigat
 
 ```
 smart college transportation system/
-├── package.json               # Root scripts
+├── package.json               # Root scripts & Vercel build definition
+├── vercel.json                # Vercel deployment configuration
+├── start.bat                  # 1-click launcher for Windows
 ├── server/                    # Node.js + Express + Socket.IO Backend
 │   ├── server.js              # Express app & real-time Socket.IO handler
 │   ├── simulator.js           # GPS movement simulation engine
 │   ├── package.json
+│   ├── .env.example
 │   └── data/
 │       ├── routes.json        # Campus routes, stops, and waypoints
 │       ├── buses.json         # Fleet dataset
@@ -70,11 +88,14 @@ smart college transportation system/
 │       ├── students.json      # Student registration & bus pass tokens
 │       └── alerts.json        # System announcements & emergency logs
 └── client/                    # React 18 + Vite + Leaflet Frontend
-    ├── index.html             # Tailwind & Leaflet styles
+    ├── index.html             # Full-height styles & meta configuration
     ├── vite.config.js         # Proxy configuration for API & WebSocket
+    ├── package.json
+    ├── .env.example
     └── src/
         ├── App.jsx            # Main app container & real-time socket events
         ├── socket.js          # Socket.IO client connection
+        ├── data/              # Fallback datasets for serverless deployments
         └── components/
             ├── Navbar.jsx     # Navigation and role switcher
             ├── MapView.jsx    # Leaflet interactive map with animated bus icons
@@ -103,8 +124,10 @@ smart college transportation system/
 ## ⚡ Real-Time Socket.IO Events
 
 - `init_state`: Initial snapshot of routes, buses, drivers, and alerts.
-- `buses_update`: Emitted every 1.6s with updated GPS positions and ETAs.
+- `buses_update`: Emitted every 1.5s with updated GPS positions and ETAs.
 - `driver_toggle_sim`: Toggle GPS movement for a vehicle.
+- `driver_update_speed`: Dynamically update vehicle velocity.
+- `driver_advance_stop`: Manually step vehicle to next waypoint.
 - `driver_update_passengers`: Live passenger count change.
 - `send_sos`: Critical emergency SOS broadcast.
 - `new_alert`: Push notification broadcasted system-wide.
