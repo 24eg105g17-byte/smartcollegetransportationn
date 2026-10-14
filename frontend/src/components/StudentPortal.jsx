@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import defaultStudents from '../data/students.json';
 
-export default function StudentPortal({ routes, buses, onTrackBus }) {
+export default function StudentPortal({ routes, buses, onTrackBus, currentUser }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRouteId, setSelectedRouteId] = useState('route-1');
-  const [rollInput, setRollInput] = useState('21A91A0501');
+  const [rollInput, setRollInput] = useState(currentUser?.studentId || '24EG105G17');
   const [studentPass, setStudentPass] = useState({
-    name: 'Sai Chandana Gokaraju',
-    rollNo: '21A91A0501',
+    name: currentUser?.name || 'Sai Chandana Gokaraju',
+    rollNo: currentUser?.studentId || '24EG105G17',
     department: 'Computer Science & Engineering',
     year: '4th Year (2023-2027)',
     routeCode: 'R-101 (North Express)',
@@ -15,9 +15,21 @@ export default function StudentPortal({ routes, buses, onTrackBus }) {
     validUntil: '31-Dec-2026',
     passType: 'Annual RFID Smart Pass',
     status: 'ACTIVE / VERIFIED',
-    qrToken: 'SCTS-PASS-21A91A0501-VERIFIED'
+    qrToken: `SCTS-PASS-${currentUser?.studentId || '24EG105G17'}-VERIFIED`
   });
   const [verificationMsg, setVerificationMsg] = useState(null);
+
+  React.useEffect(() => {
+    if (currentUser) {
+      setRollInput(currentUser.studentId);
+      setStudentPass(prev => ({
+        ...prev,
+        name: currentUser.name,
+        rollNo: currentUser.studentId,
+        qrToken: `SCTS-PASS-${currentUser.studentId}-VERIFIED`
+      }));
+    }
+  }, [currentUser]);
 
   const selectedRoute = routes.find(r => r.id === selectedRouteId);
   const busOnRoute = buses.find(b => b.routeId === selectedRouteId);

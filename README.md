@@ -102,6 +102,9 @@ smartcollegetransportationn/
 ├── backend/                   # Node.js + Express + Socket.IO Backend
 │   ├── server.js              # Express app & real-time Socket.IO handler
 │   ├── simulator.js           # GPS movement simulation engine
+│   ├── db.js                  # Persistent database abstraction (PostgreSQL & SQLite)
+│   ├── routes/
+│   │   └── auth.js            # Sign up, Login, Me, Logout endpoints with bcrypt & JWT
 │   ├── package.json
 │   ├── .env.example
 │   └── data/
@@ -120,7 +123,8 @@ smartcollegetransportationn/
         ├── socket.js          # Socket.IO client connection
         ├── data/              # Fallback datasets for serverless deployments
         └── components/
-            ├── Navbar.jsx     # Navigation and role switcher
+            ├── Navbar.jsx     # Navigation, role switcher & auth controls
+            ├── AuthModal.jsx  # Responsive Sign In & Sign Up modal
             ├── MapView.jsx    # Leaflet interactive map with animated bus icons
             ├── StudentPortal.jsx # Route search, timetables & digital pass
             ├── DriverPortal.jsx  # Telemetry, passenger count & SOS trigger
@@ -131,9 +135,19 @@ smartcollegetransportationn/
 
 ## 📡 API Endpoints
 
+### 🔐 Authentication Endpoints
 | Method | Endpoint | Description |
 |---|---|---|
-| `GET` | `/api/health` | Backend health check |
+| `POST` | `/api/auth/signup` | Register new student/driver/admin account with bcrypt |
+| `POST` | `/api/auth/login` | Authenticate with email/student ID & password; returns JWT |
+| `GET` | `/api/auth/me` | Protected route returning the authenticated user profile |
+| `POST` | `/api/auth/logout` | Client-side logout acknowledgment |
+
+### 🚌 Fleet & Transit Endpoints
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/health` | Lightweight service health check (HTTP 200) |
+| `GET` | `/api/health` | Extended backend & database health check |
 | `GET` | `/api/routes` | Get all campus routes and stop timings |
 | `GET` | `/api/buses` | Get real-time status of all fleet vehicles |
 | `GET` | `/api/drivers` | Get driver profiles and assignments |

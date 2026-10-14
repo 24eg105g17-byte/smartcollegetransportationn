@@ -24,3 +24,8 @@ Thumbs.db
 
 # Archives
 *.zip
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3

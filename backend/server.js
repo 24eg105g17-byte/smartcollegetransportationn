@@ -7,6 +7,8 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { startSimulator } from './simulator.js';
+import { initDb, getDatabaseInfo } from './db.js';
+import { authRouter } from './routes/auth.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,6 +28,12 @@ const HOST = '0.0.0.0';
 
 app.use(cors());
 app.use(express.json());
+
+// Initialize persistent database
+await initDb();
+
+// Mount authentication routes
+app.use('/api/auth', authRouter);
 
 // Load in-memory datasets with safe fallback
 const readJson = (filename, defaultValue = []) => {
@@ -60,7 +68,8 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
-    uptime: Math.round(process.uptime())
+    uptime: Math.round(process.uptime()),
+    database: getDatabaseInfo()
   });
 });
 
@@ -75,9 +84,16 @@ app.get('/', (req, res) => {
     status: 'online',
     health: '/health',
     timestamp: new Date().toISOString(),
+    database: getDatabaseInfo(),
     endpoints: {
       health: '/health',
       apiHealth: '/api/health',
+      auth: {
+        signup: 'POST /api/auth/signup',
+        login: 'POST /api/auth/login',
+        me: 'GET /api/auth/me',
+        logout: 'POST /api/auth/logout'
+      },
       routes: '/api/routes',
       buses: '/api/buses',
       drivers: '/api/drivers',

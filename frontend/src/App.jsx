@@ -4,6 +4,7 @@ import MapView from './components/MapView';
 import StudentPortal from './components/StudentPortal';
 import DriverPortal from './components/DriverPortal';
 import AdminDashboard from './components/AdminDashboard';
+import AuthModal from './components/AuthModal';
 import { socket } from './socket';
 
 import defaultRoutes from './data/routes.json';
@@ -34,7 +35,36 @@ export default function App() {
   const [selectedBusId, setSelectedBusId] = useState('bus-101');
   const [sosAlert, setSosAlert] = useState(null);
 
+  // Authentication State
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState('login');
+  const [authPendingTab, setAuthPendingTab] = useState(null);
+
   const isConnectedRef = useRef(socket.connected);
+
+  // Restore authenticated session from token
+  useEffect(() => {
+    const token = localStorage.getItem('unitransit_token');
+    if (token) {
+      fetch('/api/auth/me', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+        .then(res => {
+          if (res.ok) return res.json();
+          throw new Error('Token expired or invalid');
+        })
+        .then(data => {
+          if (data && data.user) {
+            setCurrentUser(data.user);
+          }
+        })
+        .catch(() => {
+          localStorage.removeItem('unitransit_token');
+          setCurrentUser(null);
+        });
+    }
+  }, []);
 
   // Fetch initial data from server if available
   const loadData = () => {
@@ -123,12 +153,9 @@ export default function App() {
     };
   }, [selectedBusId]);
 
-  // Client-Side GPS Simulator Fallback (Ensures Vercel and offline deployments always animate)
+  // Client-side fallback GPS simulation when backend is disconnected
   useEffect(() => {
-    const STEP_SPEED = 0.07;
-
     const timer = setInterval(() => {
-      // If connected to live backend socket, let backend drive telemetry
       if (isConnectedRef.current) return;
 
       setBuses(prevBuses => {
@@ -140,15 +167,13 @@ export default function App() {
 
           const waypoints = route.waypoints;
           const totalPoints = waypoints.length;
-
-          let progress = (bus.waypointProgress || 0) + STEP_SPEED;
-          let dir = bus.direction !== undefined ? bus.direction : 1;
+          let progress = (bus.waypointProgress || 0) + 0.07;
           let idx = bus.currentWaypointIndex || 0;
+          let dir = bus.direction !== undefined ? bus.direction : 1;
 
           if (progress >= 1.0) {
             progress = 0.0;
             idx += dir;
-
             if (idx >= totalPoints - 1) {
               dir = -1;
               idx = totalPoints - 2;
@@ -165,38 +190,36 @@ export default function App() {
           const p1 = waypoints[safeIdx1];
           const p2 = waypoints[safeIdx2] || p1;
 
-          const lat = p1[0] + (p2[0] - p1[0]) * progress;
-          const lng = p1[1] + (p2[1] - p1[1]) * progress;
+          const lat = Number((p1[0] + (p2[0] - p1[0]) * progress).toFixed(5));
+          const lng = Number((p1[1] + (p2[1] - p1[1]) * progress).toFixed(5));
 
-          const baseSpeed = bus.targetSpeed || bus.speed || 40;
-          const speedVariation = (Math.random() * 2 - 1);
-          const currentSpeed = Math.max(15, Math.min(65, Math.round(baseSpeed + speedVariation)));
+          const baseSpeed = bus.targetSpeed || 40;
+          const currentSpeed = Math.max(15, Math.min(65, Math.round(baseSpeed + (Math.random() * 3 - 1.5))));
 
-          // Nearest stop & ETA
           let nextStop = bus.nextStop;
           let etaNextStop = bus.etaNextStop;
           if (route.stops && route.stops.length > 0) {
+            let closestStop = null;
             let shortestDist = Infinity;
-            let closest = null;
-            route.stops.forEach(s => {
-              const d = getDistanceKm(lat, lng, s.lat, s.lng);
+            route.stops.forEach(stop => {
+              const d = getDistanceKm(lat, lng, stop.lat, stop.lng);
               if (d < shortestDist) {
                 shortestDist = d;
-                closest = s;
+                closestStop = stop;
               }
             });
-            if (closest) {
-              nextStop = closest.name;
-              const etaMin = Math.max(1, Math.round((shortestDist / currentSpeed) * 60));
-              etaNextStop = `${etaMin} mins`;
+            if (closestStop) {
+              nextStop = closestStop.name;
+              const mins = Math.max(1, Math.round((shortestDist / (currentSpeed || 30)) * 60));
+              etaNextStop = `${mins} mins`;
             }
           }
 
           return {
             ...bus,
             currentLocation: {
-              lat: Number(lat.toFixed(5)),
-              lng: Number(lng.toFixed(5))
+              lat: isNaN(lat) ? bus.currentLocation.lat : lat,
+              lng: isNaN(lng) ? bus.currentLocation.lng : lng
             },
             speed: currentSpeed,
             currentWaypointIndex: safeIdx1,
@@ -213,14 +236,37 @@ export default function App() {
     return () => clearInterval(timer);
   }, [routes]);
 
-  // Tab switcher with window resize dispatch for Leaflet tiles
+  // Protected Tab switcher
   const handleSelectTab = (tab) => {
+    // If attempting to access dashboard tabs without login, prompt authentication
+    if (tab !== 'map' && !currentUser) {
+      setAuthPendingTab(tab);
+      setAuthMode('login');
+      setIsAuthModalOpen(true);
+      return;
+    }
     setActiveTab(tab);
     if (tab === 'map') {
       setTimeout(() => {
         window.dispatchEvent(new Event('resize'));
       }, 150);
     }
+  };
+
+  const handleAuthSuccess = (user, token) => {
+    setCurrentUser(user);
+    setIsAuthModalOpen(false);
+    if (authPendingTab) {
+      setActiveTab(authPendingTab);
+      setAuthPendingTab(null);
+    }
+  };
+
+  const handleLogout = () => {
+    fetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
+    localStorage.removeItem('unitransit_token');
+    setCurrentUser(null);
+    setActiveTab('map');
   };
 
   // Optimistic & REST update handler for buses
@@ -247,12 +293,16 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-blue-500 selection:text-white">
-      {/* Top Navbar */}
+      {/* Top Navbar with Auth controls */}
       <Navbar
         activeTab={activeTab}
         setActiveTab={handleSelectTab}
         isConnected={isConnected}
         alertCount={alerts.length}
+        currentUser={currentUser}
+        onOpenLogin={() => { setAuthMode('login'); setIsAuthModalOpen(true); }}
+        onOpenSignup={() => { setAuthMode('signup'); setIsAuthModalOpen(true); }}
+        onLogout={handleLogout}
       />
 
       {/* Critical SOS Floating Banner */}
@@ -289,6 +339,7 @@ export default function App() {
             routes={routes}
             buses={buses}
             onTrackBus={handleTrackBus}
+            currentUser={currentUser}
           />
         )}
 
@@ -312,6 +363,14 @@ export default function App() {
           />
         )}
       </main>
+
+      {/* Authentication Modal (Sign In / Sign Up) */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => { setIsAuthModalOpen(false); setAuthPendingTab(null); }}
+        onAuthSuccess={handleAuthSuccess}
+        initialMode={authMode}
+      />
     </div>
   );
 }
