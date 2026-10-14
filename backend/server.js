@@ -20,15 +20,26 @@ const io = new Server(server, {
   }
 });
 
-const PORT = process.env.PORT || 5000;
+// Render sets process.env.PORT (default 10000 on Render)
+const PORT = process.env.PORT || 10000;
+const HOST = '0.0.0.0';
 
 app.use(cors());
 app.use(express.json());
 
-// Load in-memory datasets
-const readJson = (filename) => {
-  const filePath = path.join(__dirname, 'data', filename);
-  return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+// Load in-memory datasets with safe fallback
+const readJson = (filename, defaultValue = []) => {
+  try {
+    const filePath = path.join(__dirname, 'data', filename);
+    if (fs.existsSync(filePath)) {
+      return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+    }
+    console.warn(`[Data] Warning: File not found ${filePath}, using fallback.`);
+    return defaultValue;
+  } catch (err) {
+    console.error(`[Data] Error reading ${filename}:`, err.message);
+    return defaultValue;
+  }
 };
 
 let routes = readJson('routes.json');
@@ -37,10 +48,46 @@ let drivers = readJson('drivers.json');
 let students = readJson('students.json');
 let alerts = readJson('alerts.json');
 
-// --- REST Endpoints ---
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'healthy', timestamp: new Date().toISOString() });
+// --- Health & Info Endpoints ---
+
+// Lightweight health check endpoint for Render & monitoring (HTTP 200 with JSON)
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
 });
+
+// Extended API health check
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    uptime: Math.round(process.uptime())
+  });
+});
+
+// Root endpoint providing service status and endpoint directory
+app.get('/', (req, res) => {
+  const frontendDistPath = path.join(__dirname, '..', 'frontend', 'dist');
+  if (fs.existsSync(path.join(frontendDistPath, 'index.html'))) {
+    return res.sendFile(path.join(frontendDistPath, 'index.html'));
+  }
+  res.status(200).json({
+    service: 'Smart College Transportation System API',
+    status: 'online',
+    health: '/health',
+    timestamp: new Date().toISOString(),
+    endpoints: {
+      health: '/health',
+      apiHealth: '/api/health',
+      routes: '/api/routes',
+      buses: '/api/buses',
+      drivers: '/api/drivers',
+      students: '/api/students',
+      alerts: '/api/alerts'
+    }
+  });
+});
+
+// --- REST Endpoints ---
 
 app.get('/api/routes', (req, res) => {
   res.json(routes);
@@ -60,7 +107,7 @@ app.get('/api/students', (req, res) => {
 
 app.get('/api/students/verify/:rollNo', (req, res) => {
   const rollNo = req.params.rollNo.toUpperCase().trim();
-  const student = students.find(s => s.rollNo.toUpperCase() === rollNo);
+  const student = students.find(s => s.rollNo && s.rollNo.toUpperCase() === rollNo);
   if (student) {
     res.json({ found: true, student });
   } else {
@@ -200,7 +247,7 @@ const frontendDistPath = path.join(__dirname, '..', 'frontend', 'dist');
 if (fs.existsSync(frontendDistPath)) {
   app.use(express.static(frontendDistPath));
   app.get('*', (req, res, next) => {
-    if (req.path.startsWith('/api') || req.path.startsWith('/socket.io')) {
+    if (req.path.startsWith('/api') || req.path.startsWith('/socket.io') || req.path === '/health') {
       return next();
     }
     res.sendFile(path.join(frontendDistPath, 'index.html'));
@@ -210,6 +257,28 @@ if (fs.existsSync(frontendDistPath)) {
 // Start simulator
 startSimulator(buses, routes, io);
 
-server.listen(PORT, () => {
-  console.log(`🚌 Smart College Transportation Server running on http://localhost:${PORT}`);
+// Error and lifecycle handling to keep process running reliably
+server.on('error', (err) => {
+  console.error('[Server] Fatal server error:', err);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('[Process] Uncaught Exception:', err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[Process] Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('SIGTERM', () => {
+  console.log('[Server] SIGTERM received, shutting down gracefully...');
+  server.close(() => {
+    console.log('[Server] HTTP server closed');
+    process.exit(0);
+  });
+});
+
+// Bind explicitly to 0.0.0.0 and process.env.PORT || 10000 for Render
+server.listen(PORT, HOST, () => {
+  console.log(`🚌 Smart College Transportation Server running on http://${HOST}:${PORT}`);
 });

@@ -75,6 +75,23 @@ This repository is optimized for Vercel deployment:
 
 ---
 
+## 🚀 Deploy Backend to Render
+
+1. Create a **New Web Service** on [Render](https://render.com).
+2. Connect your GitHub repository: `https://github.com/24eg105g17-byte/smartcollegetransportationn`.
+3. Recommended settings:
+   - **Name**: `smartcollege-transport-backend`
+   - **Root Directory**: `backend`
+   - **Environment**: `Node`
+   - **Build Command**: `npm install`
+   - **Start Command**: `node server.js`
+4. Render automatically supplies the `PORT` environment variable (default `10000`), which `server.js` binds to on `0.0.0.0`.
+5. Verify health:
+   - `https://smartcollege-transport-backend.onrender.com/health` returns `{"status":"ok"}`.
+   - `https://smartcollege-transport-backend.onrender.com/` returns the API directory.
+
+---
+
 ## 📁 Project Architecture
 
 ```

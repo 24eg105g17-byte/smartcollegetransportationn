@@ -1,6 +1,14 @@
 {
   "rewrites": [
     {
+      "source": "/api/(.*)",
+      "destination": "https://smartcollege-transport-backend.onrender.com/api/$1"
+    },
+    {
+      "source": "/health",
+      "destination": "https://smartcollege-transport-backend.onrender.com/health"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
